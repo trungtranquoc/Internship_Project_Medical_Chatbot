@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package chat;
+
+service Chat {
+  rpc Answer (QuestionRequest) returns (AnswerResponse);
+}
+
+message HistoryList {
+  string role = 1;
+  string content = 2;
+}
+
+message QuestionRequest {
+  string query = 1;
+  repeated HistoryList history = 2;
+}
+
+message AnswerResponse {
+  string answer = 1;
+  repeated string related_questions = 2;
+}
