@@ -119,6 +119,9 @@ DEVICE=cpu  # Options: cpu, cuda | For Macbook, Docker currently not support `mp
 - *OpenAI API_KEY can be generated from: [OpenAI Platform](https://platform.openai.com/usage)*
 - *Chainlit Secret Key can be created locally by command: `cd frontend/ && chainlit create-secret`*
 
+### Loading vector database
+After specify the `OPENAI_API_KEY` in `.env` file, you need to run all cells from notebook [load_vector_database.ipynb](/load_vector_database.ipynb) for downloading data and vectorize them into `Milvus Server`.
+
 ## �🐳 Docker Deployment
 
 All services are containerized and orchestrated using Docker Compose:
@@ -154,13 +157,6 @@ This internship project covers the complete AI engineering pipeline:
 4. **DevOps Practices** - Containerization, orchestration, and deployment
 5. **AI Model Integration** - Combining multiple AI models and APIs
 6. **Database Management** - Both relational and vector database operations
-
-## 👨‍💻 Author
-
-**Tran Quoc Trung**  
-Computer Science Student - Ho Chi Minh City University of Technology (HCMUT)  
-Research Focus: Data Science, Large Language Models, Math-driven Research  
-📧 trung.tranquoc2004@hcmut.edu.vn
 
 ---
 
