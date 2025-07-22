@@ -1,0 +1,4 @@
+chainlit==2.5.5
+SQLAlchemy==2.0.41
+asyncpg
+greenlet
