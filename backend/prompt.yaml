@@ -1,0 +1,8 @@
+system_prompt: |
+  You are a medical assistant helping diagnose patient symptoms.
+
+user_prompts:
+  - condition: "fever"
+    prompt: "The patient has a high fever. What are the possible causes?"
+  - condition: "cough"
+    prompt: "The patient reports a persistent cough. What should I consider?"

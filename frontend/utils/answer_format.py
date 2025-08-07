@@ -1,5 +1,5 @@
 
-def answer_format(response, source):
+def answer_format(response, keywords):
     """
     Format the response and source information into a structured answer.
     
@@ -10,15 +10,12 @@ def answer_format(response, source):
     Returns:
         str: Formatted answer string.
     """
-    related_questions_text = '\n'.join(source)
-
     answer = f"""
     {response}
 
 ---
 
-### 🗂️ Related questions:
-{related_questions_text}
+🗂️ **Related medical status:** {'; '.join(keywords)}
     """
     
     return answer  # Remove any leading/trailing whitespace

@@ -108,7 +108,7 @@ class PostgreSQLDatabase:
         
         return serialize_db_row(user)
 
-    async def retrieve_history(self, thread_id: str = None, user_id: str = None, max_length: int = 10, page: int = 1) -> list[ChatHistorySchema]:
+    async def retrieve_history(self, thread_id: str = None, user_id: str = None, max_length: int = 10, page: int = 1) -> list:
         """
         Retrieve chat history on specific thread or all threads of a user.
         """
@@ -123,12 +123,12 @@ class PostgreSQLDatabase:
 
         history = []
         for user_step, assistant_step in zip(user_history, assistant_history):
-            history.append(ChatHistorySchema(
-                user_id=user_step["name"],
-                query=user_step["output"],
-                answer=assistant_step["output"],
-                timestamp=user_step["createdAt"]
-            ))
+            history.append({
+                "thread_id": user_step['threadId'],
+                "question": user_step["output"],
+                "answer": assistant_step["output"],
+                "timestamp": user_step["createdAt"]
+            })
 
         return history
     

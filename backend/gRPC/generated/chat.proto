@@ -17,6 +17,8 @@ message QuestionRequest {
 }
 
 message AnswerResponse {
-  string answer = 1;
-  repeated string related_questions = 2;
+  bool isSuccess = 1; 
+  string answer = 2;
+  repeated string related_questions = 3;
+  repeated string keywords = 4;
 }

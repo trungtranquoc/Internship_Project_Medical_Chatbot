@@ -1,5 +1,8 @@
 import chainlit as cl
 from chainlit.data.sql_alchemy import SQLAlchemyDataLayer
+
+from chainlit.input_widget import Select
+
 from services import get_chat_response
 from config import HTTPClient
 import dotenv
@@ -82,6 +85,19 @@ async def on_chat_start():
         else:
             logger.error("No user session found. User ID header will not be set.")
             return
+        
+        settings = await cl.ChatSettings(
+            [
+                Select(
+                    id="role",
+                    label="Your Role",
+                    values=["patient", "medical student"],
+                    initial_index=0,
+                )
+            ]
+        ).send()
+        value = settings["role"]
+
     except Exception as e:
         # Handle connection errors and set the error message
         logger.error(
@@ -113,15 +129,19 @@ async def message_receive(message):
     Main function to handle incoming messages.
     """
     msg = cl.Message(content="💬 Đang xử lý câu hỏi của bạn, vui lòng chờ...")
+    thread_id = cl.context.session.thread_id
+    role = cl.context.session.chat_settings.get("role", "patient")
+    print("Role selected:", role)
     
     # Process the message and generate a response
     try:
-        response, related_questions = await get_chat_response(
+        response, keywords = await get_chat_response(
             question=message.content,
+            thread_id=thread_id,
             http=http_client
         )
 
-        msg.content = answer_format(response, related_questions).strip()  # Remove any leading/trailing whitespace
+        msg.content = answer_format(response, keywords).strip()  # Remove any leading/trailing whitespace
     except Exception as e:
         # Handle exceptions and set the error message
         msg.is_error = True

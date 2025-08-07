@@ -24,12 +24,11 @@ router.add_event_handler("startup", chatbot_grpc_client.connect)
 router.add_event_handler("shutdown", chatbot_grpc_client.disconnect)
 
 @router.get("/history")
-async def get_history(request: Request, thread_id: str = None) -> list:
+async def get_history(request: Request, thread_id: str = None):
     """
     Endpoint to retrieve chat history for the user.
     """
     if thread_id:
-        # history = await db['chat_history'].find({"thread_id": thread_id}).to_list(length=None)
         history = await postgresql_db.retrieve_history(thread_id)
     else:
         # history = await db['chat_history'].find({"user_token": user_token}).to_list(length=None)
@@ -37,18 +36,8 @@ async def get_history(request: Request, thread_id: str = None) -> list:
 
     if not history:
         return []
-    
-    return history
-    # return [
-    #     {
-    #         "thread_id": entry["thread_id"],
-    #         "question": entry["question"],
-    #         "answer": entry["answer"],
-    #         "timestamp": entry["timestamp"],
-    #         "inference_time": entry["inference_time"],
-    #         "related_questions": entry.get("related_questions", [])
-    #     } for entry in history
-    # ]
+
+    return JSONResponse(content={"history": history, "size": len(history)}, status_code=200)
 
 @router.post("/query")
 async def query(request: Request, query_body: ChatbotQuery) -> ChatbotAnswering:
@@ -59,8 +48,6 @@ async def query(request: Request, query_body: ChatbotQuery) -> ChatbotAnswering:
     
     # Retrieve history if provided
     history = await postgresql_db.retrieve_context(thread_id=thread_id) if thread_id else []
-
-    logger.info(f"Session id: {thread_id} - Found history: {history}")
 
     start = time()
     answer, related_questions = await asyncio.to_thread(chatbot_grpc_client.send_question, question, history)
