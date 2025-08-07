@@ -9,6 +9,7 @@ COPY ./src /code/src
 COPY ./grpc_generated/chat.proto /code/grpc_generated/chat.proto
 COPY server.py /code/server.py
 COPY .env.production /code/.env.production
+COPY .prompts.yaml /code/prompts.yaml
 
 # Create __init__.py file for grpc_generated module
 RUN touch /code/grpc_generated/__init__.py

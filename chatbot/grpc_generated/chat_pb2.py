@@ -24,7 +24,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\nchat.proto\x12\x04\x63hat\",\n\x0bHistoryList\x12\x0c\n\x04role\x18\x01 \x01(\t\x12\x0f\n\x07\x63ontent\x18\x02 \x01(\t\"D\n\x0fQuestionRequest\x12\r\n\x05query\x18\x01 \x01(\t\x12\"\n\x07history\x18\x02 \x03(\x0b\x32\x11.chat.HistoryList\";\n\x0e\x41nswerResponse\x12\x0e\n\x06\x61nswer\x18\x01 \x01(\t\x12\x19\n\x11related_questions\x18\x02 \x03(\t2=\n\x04\x43hat\x12\x35\n\x06\x41nswer\x12\x15.chat.QuestionRequest\x1a\x14.chat.AnswerResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\nchat.proto\x12\x04\x63hat\",\n\x0bHistoryList\x12\x0c\n\x04role\x18\x01 \x01(\t\x12\x0f\n\x07\x63ontent\x18\x02 \x01(\t\"D\n\x0fQuestionRequest\x12\r\n\x05query\x18\x01 \x01(\t\x12\"\n\x07history\x18\x02 \x03(\x0b\x32\x11.chat.HistoryList\"`\n\x0e\x41nswerResponse\x12\x11\n\tisSuccess\x18\x01 \x01(\x08\x12\x0e\n\x06\x61nswer\x18\x02 \x01(\t\x12\x19\n\x11related_questions\x18\x03 \x03(\t\x12\x10\n\x08keywords\x18\x04 \x03(\t2=\n\x04\x43hat\x12\x35\n\x06\x41nswer\x12\x15.chat.QuestionRequest\x1a\x14.chat.AnswerResponseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -36,7 +36,7 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_QUESTIONREQUEST']._serialized_start=66
   _globals['_QUESTIONREQUEST']._serialized_end=134
   _globals['_ANSWERRESPONSE']._serialized_start=136
-  _globals['_ANSWERRESPONSE']._serialized_end=195
-  _globals['_CHAT']._serialized_start=197
-  _globals['_CHAT']._serialized_end=258
+  _globals['_ANSWERRESPONSE']._serialized_end=232
+  _globals['_CHAT']._serialized_start=234
+  _globals['_CHAT']._serialized_end=295
 # @@protoc_insertion_point(module_scope)
