@@ -34,7 +34,7 @@ class ChatStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.Answer = channel.unary_unary(
+        self.Answer = channel.unary_stream(
                 '/chat.Chat/Answer',
                 request_serializer=chat__pb2.QuestionRequest.SerializeToString,
                 response_deserializer=chat__pb2.AnswerResponse.FromString,
@@ -53,7 +53,7 @@ class ChatServicer(object):
 
 def add_ChatServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'Answer': grpc.unary_unary_rpc_method_handler(
+            'Answer': grpc.unary_stream_rpc_method_handler(
                     servicer.Answer,
                     request_deserializer=chat__pb2.QuestionRequest.FromString,
                     response_serializer=chat__pb2.AnswerResponse.SerializeToString,
@@ -80,7 +80,7 @@ class Chat(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(
+        return grpc.experimental.unary_stream(
             request,
             target,
             '/chat.Chat/Answer',

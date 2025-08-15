@@ -50,6 +50,7 @@ services:
       MILVUS_HOST: milvus-standalone
       MILVUS_PORT: 19530
       MILVUS_COLLECTION: medical_QA_embedding
+      LANGFUSE_AVAILABLE: False # Do not used Langfuse
       # DEVICE: mps
       # PYTORCH_ENABLE_MPS_FALLBACK: 1 # Enable MPS fallback for PyTorch
     ports:

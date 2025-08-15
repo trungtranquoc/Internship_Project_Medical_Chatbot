@@ -1,6 +1,7 @@
 from pydantic import BaseModel
+from typing import Optional
 
 class ChatbotAnswering(BaseModel):
     answer: str
-    related_questions: list[str]
-    inference_time: float = None
+    time_to_first_token: Optional[float] = None
+    inference_time: Optional[float] = None

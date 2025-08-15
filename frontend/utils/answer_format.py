@@ -12,10 +12,6 @@ def answer_format(response, keywords):
     """
     answer = f"""
     {response}
-
----
-
-🗂️ **Related medical status:** {'; '.join(keywords)}
     """
     
     return answer  # Remove any leading/trailing whitespace

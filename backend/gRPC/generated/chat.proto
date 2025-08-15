@@ -3,7 +3,7 @@ syntax = "proto3";
 package chat;
 
 service Chat {
-  rpc Answer (QuestionRequest) returns (AnswerResponse);
+  rpc Answer (QuestionRequest) returns (stream AnswerResponse);
 }
 
 message HistoryList {
@@ -14,11 +14,9 @@ message HistoryList {
 message QuestionRequest {
   string query = 1;
   repeated HistoryList history = 2;
+  bool isStreaming = 3;
 }
 
 message AnswerResponse {
-  bool isSuccess = 1; 
-  string answer = 2;
-  repeated string related_questions = 3;
-  repeated string keywords = 4;
+  string answer = 1;
 }

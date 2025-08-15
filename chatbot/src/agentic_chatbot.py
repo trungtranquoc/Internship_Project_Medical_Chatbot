@@ -1,5 +1,6 @@
 import dotenv
 import os
+from typing import Union, Generator, AsyncGenerator
 
 dotenv.load_dotenv('../.env.development', override=True)
 
@@ -37,7 +38,6 @@ class AgenticChatbot(StateGraph):
         )
 
         self.graph_builder.add_edge("vietnamese_translation", "query_rewrite")
-        # self.graph_builder.add_edge("query_rewrite", END)
         self.graph_builder.add_edge("query_rewrite", "question_classification")
         self.graph_builder.add_edge("query_rewrite", "rag_retrieve")
         self.graph_builder.add_edge("question_classification", "answer_generation")
@@ -50,7 +50,7 @@ class AgenticChatbot(StateGraph):
             # Not use Langfuse for observability
             self.graph = self.graph_builder.compile()
 
-    def answer(self, question: str, history: list = []) -> tuple[str, list[str], list[str], bool]:
+    def answer(self, question: str, history: list = []) -> str:
         """
         Process a question and return the classified question type, keywords, and related questions.
         """
@@ -69,9 +69,34 @@ class AgenticChatbot(StateGraph):
             "user_language": "english"
         })
 
-        state = self.graph.invoke(state)
-        keywords = list(set([data['keyword'] for data in state['context']]))
+        state = self.graph.run(state)
+        return state['answer']
 
-        self.logger.info("Answer of model: {answer}. Related questions: {lst}".format(answer=state['answer'], lst=[data['question'] for data in state['context']]))
+    async def start_streaming(self, question: str, history: list = []) -> AsyncGenerator[str, None]:
+        """
+        Start streaming answers for a given question with the provided history.
+        This method is used for gRPC streaming responses.
+        """
+        self.logger.info(f"Processing question: {question}")
 
-        return state['answer'], keywords, [data['question'] for data in state['context']]
+        state = State({
+            'question': question,
+            'history': [
+                {
+                    'role': item.role,
+                    'content': item.content
+                }  for item in history],
+            "answer": "",
+            "context": [],
+            "question_type": "",
+            "user_language": "english",
+            "is_streaming": True
+        })
+        
+        async for event in self.graph.astream(state, stream_mode="messages"):
+            if not event[1].get("langgraph_node", "").endswith("generation"):
+                continue
+            msg = event[0]
+            yield msg.text()
+
+        self.logger.info(f"Answer streaming completed for question: {question}")

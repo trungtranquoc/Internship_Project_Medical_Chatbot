@@ -3,7 +3,7 @@ from .generated import *
 import grpc
 import logging
 import time
-from typing import List, Optional
+from typing import List, Optional, Union, Generator, AsyncGenerator
 from .generated import chat_pb2, chat_pb2_grpc
 from .config import (
     GRPC_HOST, GRPC_PORT, CONNECTION_TIMEOUT, 
@@ -89,7 +89,7 @@ class ChatbotGRPCClient:
         logger.info("gRPC connection closed")
         return True
 
-    def send_question(self, query: str, history: Optional[list] = None) -> tuple[str, list[str]]:
+    async def send_question(self, query: str, history: Optional[list] = None) -> AsyncGenerator[str, None]:
         """
         Send a question to the chatbot server
         
@@ -102,26 +102,27 @@ class ChatbotGRPCClient:
         """
         if not self.stub:
             logger.error("gRPC client not connected. Call connect() first.")
-            return None
+            yield None
         
         try:
             # Create request
             request = chat_pb2.QuestionRequest(
                 query=query,
-                history=history or []
+                history=history or [],
+                isStreaming=True
             )
             
-            # Make the gRPC call
-            response = self.stub.Answer(request)
-            return response.answer, response.related_questions
+            for resp in self.stub.Answer(request, timeout=60.0):
+                # yield partial chunk to caller
+                yield resp.answer
             
         except grpc.RpcError as e:
             logger.error(f"gRPC call failed: {e.code()}: {e.details()}")
-            return None
+            yield None
         except Exception as e:
             logger.error(f"Unexpected error during gRPC call: {e}")
-            return None
-    
+            yield None
+
     def __enter__(self):
         """Context manager entry"""
         self.connect()

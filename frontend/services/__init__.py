@@ -1,3 +1,3 @@
-from .chat import get_chat_response
+from .chat import get_chat_response, get_chat_response_streaming
 
-__all__ = ["get_chat_response"]
+__all__ = ["get_chat_response", "get_chat_response_streaming"]

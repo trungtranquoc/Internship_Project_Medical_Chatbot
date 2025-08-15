@@ -17,9 +17,7 @@ langfuse_callback = CallbackHandler(public_key=os.environ.get("LANGFUSE_PUBLIC_K
 
 def create_observed_method(node_name: str, original_method: Callable):
     """Create an observed version of the method"""
-    def wrapped_method(self, **args):
-        @observe(name=node_name)
-        def observed_call(**args):              # Passing arguments so that Langfuse can observe the input and output of the function
-            return original_method(self, **args)
-        return observed_call(**args)
-    return wrapped_method
+    @observe(name=node_name)
+    def observed_call(self, **args):              # Passing arguments so that Langfuse can observe the input and output of the function
+        return original_method(self, **args)
+    return observed_call

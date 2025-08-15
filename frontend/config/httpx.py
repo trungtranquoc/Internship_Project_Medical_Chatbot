@@ -1,11 +1,16 @@
 import httpx
 from httpx import AsyncClient
 from exception import ConnectionError, CustomHTTPError
+import inspect
 
 def handle_http_exceptions(func):
     async def wrapper(self, *args, **kwargs):
         try:
-            return await func(self, *args, **kwargs)
+            if inspect.isasyncgenfunction(func):
+                async for item in func(self, *args, **kwargs):
+                    yield item
+            else:
+                yield await func(self, *args, **kwargs)
         except httpx.HTTPStatusError as e:
             # Raise custom HTTP error based on status code
             CustomHTTPError.error_raising(e.response.status_code, str(e))
@@ -49,6 +54,14 @@ class HTTPClient:
         response = await self.client.post(endpoint, json=body)
         response.raise_for_status()
         return response.json()
-
+    
+    @handle_http_exceptions
+    async def streaming(self, endpoint: str, body: dict = None):
+        async with self.client.stream("POST", endpoint, json=body) as response:
+            response.raise_for_status()
+            async for chunk in response.aiter_text():
+                yield chunk
+        
+            
     async def close(self):
         await self.client.aclose()

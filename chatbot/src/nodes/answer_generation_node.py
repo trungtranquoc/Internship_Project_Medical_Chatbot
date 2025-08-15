@@ -1,7 +1,11 @@
+from typing import Union, AsyncGenerator
+from langfuse import observe
+
 from ..utils import QUESTION_DESCRIPTION
 from .base_node import BaseNode
 from .state import State
 from .exception import InsufficientInformationError
+from ..models import open_ai_model
 
 class AnswerGenerationNode(BaseNode):
     """
@@ -9,7 +13,19 @@ class AnswerGenerationNode(BaseNode):
     This node uses a classification prompt to determine the type of question and
     generates an appropriate answer using the provided medical documents.
     """
-    def _call(self, context: dict, question: str, question_type: str, user_language: str):
+    @observe(name="answer_generation_node", as_type="generation", transform_to_string=lambda x: " ".join(x))
+    async def _chat(self, msgs: list) -> AsyncGenerator[str, None]:
+        async for chunk in open_ai_model.astream(self.msgs):
+            yield chunk.content
+
+    # @observe("answer_generation_node") 
+    async def __call__(self, state: State):
+        question_type = state.get('question_type', None)
+        question = state.get('question', "")
+        user_language = state.get('user_language', "english")
+        context = state.get('context', [])
+        is_streaming = state.get('is_streaming', False)
+
         if not context:
             raise InsufficientInformationError()
         context = '\n\n'.join([data['answer'] for data in context])
@@ -26,10 +42,14 @@ class AnswerGenerationNode(BaseNode):
             specific_instructions=specific_instructions,
         )))
 
-        response = self._invoke()
-
-        self.logger.info(f"Generated answer completed !")
-
-        return {
-            'answer': response,
-        }
+        if is_streaming:
+            self.logger.info(f"Generating answer for question: {question}.")
+            full_msg = ""
+            async for chunk in self._chat(self.msgs):
+                full_msg += chunk + " "
+                yield {"answer": chunk}
+            yield {"answer": full_msg.strip()}
+            self.logger.info(f"Generated answer completed !")
+        else:
+            response = self._invoke()
+            yield {'answer': response}

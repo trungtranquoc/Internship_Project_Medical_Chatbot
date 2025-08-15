@@ -1,11 +1,13 @@
 import os
+from ..logger import CustomLogger
 
 from .yaml_prompt import YamlPromptManagement
 from .langfuse_prompt import LangfusePromptManagement
 
 LANGFUSE_AVAILABLE = os.getenv("LANGFUSE_AVAILABLE", "False") != "False"
+logger = CustomLogger('prompt_management')
 
-print("Loading prompt management system...")
+logger.info("Loading prompt management system...")
 if LANGFUSE_AVAILABLE:
     prompt_management = LangfusePromptManagement()
 else:

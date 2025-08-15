@@ -6,5 +6,7 @@
 *.pkl
 .env
 
+chatbot/data_mining/
+
 *.csv
 .chainlit

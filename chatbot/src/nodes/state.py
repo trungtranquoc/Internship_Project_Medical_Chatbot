@@ -9,3 +9,4 @@ class State(TypedDict):
     context: list[dict]            # List of context documents
     answer: str                   # Generated answer
     question_type: str     # Type of question (e.g., general, medical, etc.)
+    is_streaming: bool = False  # Flag for streaming mode

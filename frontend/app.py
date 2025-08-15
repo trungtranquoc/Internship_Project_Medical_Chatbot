@@ -3,7 +3,7 @@ from chainlit.data.sql_alchemy import SQLAlchemyDataLayer
 
 from chainlit.input_widget import Select
 
-from services import get_chat_response
+from services import get_chat_response, get_chat_response_streaming
 from config import HTTPClient
 import dotenv
 import os
@@ -128,20 +128,21 @@ async def message_receive(message):
     """
     Main function to handle incoming messages.
     """
-    msg = cl.Message(content="💬 Đang xử lý câu hỏi của bạn, vui lòng chờ...")
+    msg = cl.Message(content="")
     thread_id = cl.context.session.thread_id
     role = cl.context.session.chat_settings.get("role", "patient")
     print("Role selected:", role)
     
     # Process the message and generate a response
     try:
-        response, keywords = await get_chat_response(
+        async for token in get_chat_response_streaming(
             question=message.content,
             thread_id=thread_id,
             http=http_client
-        )
-
-        msg.content = answer_format(response, keywords).strip()  # Remove any leading/trailing whitespace
+        ):
+            await msg.stream_token(token)
+        
+        await msg.update()
     except Exception as e:
         # Handle exceptions and set the error message
         msg.is_error = True
