@@ -6,11 +6,7 @@ import inspect
 def handle_http_exceptions(func):
     async def wrapper(self, *args, **kwargs):
         try:
-            if inspect.isasyncgenfunction(func):
-                async for item in func(self, *args, **kwargs):
-                    yield item
-            else:
-                yield await func(self, *args, **kwargs)
+            return await func(self, *args, **kwargs)
         except httpx.HTTPStatusError as e:
             # Raise custom HTTP error based on status code
             CustomHTTPError.error_raising(e.response.status_code, str(e))
@@ -19,7 +15,22 @@ def handle_http_exceptions(func):
             raise ConnectionError(self.client.base_url, str(e))
         except Exception as e:
             raise CustomHTTPError.error_raising(500, str(e))
-    return wrapper
+        
+    async def async_gen_wrapper(self, *args, **kwargs):
+        try:
+            async for item in func(self, *args, **kwargs):
+                yield item
+        except httpx.HTTPStatusError as e:
+            CustomHTTPError.error_raising(e.response.status_code, str(e))
+        except httpx.ConnectError as e:
+            raise ConnectionError(self.client.base_url, str(e))
+        except Exception as e:
+            raise CustomHTTPError.error_raising(500, str(e))
+    
+    if inspect.isasyncgenfunction(func):
+        return async_gen_wrapper
+    else:
+        return wrapper
 
 
 class HTTPClient:

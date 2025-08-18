@@ -57,7 +57,6 @@ async def auto_callback(username: str, password: str):
         logger.error(f"HTTP error during authentication: {e.response.status_code} - {e.response.text}")
         return None
     except Exception as e:
-        
         logger.error(f"Error in login: {e}")
         return None
 
