@@ -5,6 +5,7 @@
 *.pyd
 *.pkl
 .env
+.env.*
 
 chatbot/data_mining/
 
