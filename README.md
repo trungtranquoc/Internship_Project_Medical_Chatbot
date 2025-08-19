@@ -158,6 +158,12 @@ This internship project covers the complete AI engineering pipeline:
 5. **AI Model Integration** - Combining multiple AI models and APIs
 6. **Database Management** - Both relational and vector database operations
 
+--- 
+
+# Usecase examples
+
+<img src="chatbot/gif/demo.gif" alt="Feature demo" width="640" />
+
 ---
 
 ⚠️ **Medical Disclaimer**: This chatbot is for educational purposes only. Always consult qualified healthcare professionals for medical advice.
