@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: medical-chatbot-config
+data:
+  # ========== FRONTEND SERVICE ==========
+  BACKEND_HOST: "backend-service"            # FastAPI backend service DNS
+  BACKEND_PORT: "8001"
+  HTTP_TIMEOUT: "60"                         # Timeout for Chatbot to respond
+  POSTGRES_HOST: "postgres-service"          # PostgreSQL service DNS
+  POSTGRES_PORT: "5432"
+  POSTGRES_USER: "CHAINLIT_DB"
+  POSTGRES_DB: "MEDICAL_CHAT_HISTORY"
+
+  # ========== BACKEND SERVICE ==========
+  # Uses POSTGRES_* from above for database connection
+
+  # ========== CHATBOT SERVICE ==========
+  MILVUS_HOST: "milvus-standalone"           # Milvus service DNS
+  MILVUS_PORT: "19530"
+  MILVUS_COLLECTION: "medical_QA_embedding"
+  LANGFUSE_AVAILABLE: "false"
+  LANGFUSE_HOST: "https://api.langfuse.com"
+  DEVICE: "cpu"                              # cpu | mps | cuda (based on infrastructure)
+
+  # ========== DB SERVICE (PostgreSQL) ==========
+  PGUSER: "CHAINLIT_DB"
+
+  # ========== ETCD SERVICE ==========
+  ETCD_AUTO_COMPACTION_MODE: "revision"
+  ETCD_AUTO_COMPACTION_RETENTION: "1000"
+  ETCD_QUOTA_BACKEND_BYTES: "4294967296"
+  ETCD_SNAPSHOT_COUNT: "50000"
+  ETCD_ENDPOINTS: "etcd:2379"                # For Milvus to connect to etcd
+
+  # ========== MINIO SERVICE ==========
+  MINIO_ADDRESS: "minio:9000"                # For Milvus to connect to MinIO
+
+  # ========== MILVUS (STANDALONE) SERVICE ==========
+  MQ_TYPE: "woodpecker"
+
+  # ========== GLOBAL/SHARED CONFIG ==========
+  ENV: "development"                          # development | staging | production

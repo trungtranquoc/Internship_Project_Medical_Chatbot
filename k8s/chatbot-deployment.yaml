@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: medical-chatbot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: chatbot
+  template:
+    metadata:
+      labels:
+        app: chatbot
+    spec:
+      containers:
+      - name: chatbot
+        image: medical-chatbot:latest
+        ports:
+        - containerPort: 50051
+        env:
+        - name: OPENAI_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: medical-secrets
+              key: OPENAI_API_KEY
+        - name: MILVUS_HOST
+          value: "milvus-standalone"
+        - name: MILVUS_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: medical-chatbot-config
+              key: MILVUS_PORT
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: medical-chatbot-service
+spec:
+  selector:
+    app: chatbot
+  ports:
+    - protocol: TCP
+      port: 50051
+      targetPort: 50051
