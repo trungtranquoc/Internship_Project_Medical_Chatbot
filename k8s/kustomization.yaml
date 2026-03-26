@@ -6,6 +6,8 @@ namespace: medical-chatbot
 resources:
   - configmap.yaml
   - postgres-storage.yaml
-  - frontend-deployment.yaml
+  - postgres-deployment.yaml
   - backend-deployment.yaml
+  - frontend-deployment.yaml
   - chatbot-deployment.yaml
+

@@ -15,13 +15,25 @@ spec:
       containers:
       - name: frontend
         image: medical-chatbot-ui:latest
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8000
         env:
         - name: BACKEND_HOST
-          value: "medical-backend-service"
+          valueFrom:
+            configMapKeyRef:
+              name: medical-chatbot-config
+              key: BACKEND_HOST
         - name: BACKEND_PORT
-          value: "8001"
+          valueFrom:
+            configMapKeyRef:
+              name: medical-chatbot-config
+              key: BACKEND_PORT
+        - name: CHAINLIT_AUTH_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: medical-secrets
+              key: CHAINLIT_AUTH_SECRET
 ---
 apiVersion: v1
 kind: Service
