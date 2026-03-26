@@ -1,12 +1,11 @@
 from fastapi import FastAPI, HTTPException, Request, Depends
 from fastapi.responses import JSONResponse
 import uvicorn
-import dotenv
 import os
 import json
 
-env = os.getenv("ENV", "development")
-dotenv.load_dotenv(f".env.{env}", override=True)
+# env = os.getenv()
+# dotenv.load_dotenv(f".env.{env}", override=True)
 
 from routers import user, admin
 from database import postgresql_db
@@ -85,5 +84,5 @@ async def router_header_filter(request: Request):
 app.include_router(user.router, prefix="/chatbot", tags=["chatbot"], dependencies=[Depends(router_header_filter)])
 app.include_router(admin.router, prefix="/admin", tags=["admin"], dependencies=[Depends(router_header_filter), Depends(router_admin_filter)])
 
-if __name__ == "__main__":
-    uvicorn.run("app:app", host="0.0.0.0", port=8001, reload=True)
+# if __name__ == "__main__":
+#     uvicorn.run("app:app", host="0.0.0.0", port=8001, reload=True)

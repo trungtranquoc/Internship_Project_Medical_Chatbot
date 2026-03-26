@@ -1,0 +1,23 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Install dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy the source code directories as defined in your repo structure
+COPY ./database ./database
+COPY ./gRPC ./gRPC
+COPY ./model ./model
+COPY ./routers ./routers
+
+# Copy main application files
+COPY app.py .
+COPY prompt.yaml .
+
+# Expose the FastAPI port defined in docker-compose.yml
+EXPOSE 8001
+
+# Start the application
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8001"]
