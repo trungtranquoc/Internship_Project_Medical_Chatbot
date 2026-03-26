@@ -1,20 +1,18 @@
 from logging import StreamHandler, INFO, Logger, Formatter
-from nguyenpanda.swan import random_color_text, red, green, misty_rose, gray
+from nguyenpanda.swan import red, green, yellow, blue
 
 class CustomLogger(Logger):
-    def __init__(self, name: str, color_function=random_color_text):
+    def __init__(self, name: str):
         super().__init__(name)
         self.setLevel(INFO)
         stream_handler = StreamHandler()
         stream_handler.setFormatter(Formatter('%(asctime)s - %(message)s'))
         self.addHandler(stream_handler)
 
-        self.color_function = color_function
-
     def info(self, msg):
-        msg = f"{self.color_function('Node ' + self.name)} - {green('INFO')}: {gray(msg)}"
+        msg = f"{blue('Node ' + self.name)} - {green('INFO')}: {msg}"
         super().info(msg)
 
     def error(self, msg):
-        msg = f"{self.color_function('Node ' + self.name)} - {red('ERROR')}: {misty_rose(msg)}"
+        msg = f"{blue('Node ' + self.name)} - {red('ERROR')}: {msg}"
         super().error(msg)

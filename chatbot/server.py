@@ -3,10 +3,11 @@ import grpc
 from concurrent import futures
 from grpc_generated import chat_pb2, chat_pb2_grpc
 import os
-import dotenv
+# import dotenv
 from src.logger import CustomLogger
 
-dotenv.load_dotenv(f".env.{os.getenv('ENV', 'development')}", override=True)
+# dotenv.load_dotenv(f".env.{os.getenv('ENV', 'development')}", override=True)
+# env = os.getenv()
 os.environ['GRPC_ENABLE_FORK_SUPPORT'] = '1'
 logger = CustomLogger('grpc_server')
 

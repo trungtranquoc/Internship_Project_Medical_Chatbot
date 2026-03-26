@@ -8,7 +8,6 @@ from .nodes import QuestionClassificationNode, AnswerGenerationNode, RAGRetrieve
 from .langfuse_config import langfuse_callback
 from langgraph.graph import StateGraph, START, END
 from .logger import CustomLogger
-from nguyenpanda.swan import blue_violet, aqua, green_yellow, light_coral, blue, light_pink, misty_rose
 
 LANGFUSE_AVAILABLE = os.getenv("LANGFUSE_AVAILABLE", "False") != "False"
 
@@ -16,15 +15,15 @@ class AgenticChatbot(StateGraph):
     def __init__(self):
         self.graph_builder = StateGraph(State)
         self.graph = None
-        self.logger = CustomLogger('agentic_chatbot', misty_rose)
+        self.logger = CustomLogger('agentic_chatbot')
 
     def start(self):
-        self.graph_builder.add_node("query_rewrite", QueryRewriteNode(CustomLogger('query_rewrite', light_coral)))
-        self.graph_builder.add_node("question_classification", QuestionClassificationNode(CustomLogger('question_classification', aqua)))
-        self.graph_builder.add_node("rag_retrieve", RAGRetrieveNode(CustomLogger('rag_retrieve', blue_violet)))
-        self.graph_builder.add_node("answer_generation", AnswerGenerationNode(CustomLogger('answer_generation', green_yellow)))
-        self.graph_builder.add_node("language_detection", DetectLanguageNode(CustomLogger('language_detection', light_pink)))
-        self.graph_builder.add_node("vietnamese_translation", VietnameseTranslationNode(CustomLogger('vietnamese_translation', blue)))
+        self.graph_builder.add_node("query_rewrite", QueryRewriteNode(CustomLogger('query_rewrite')))
+        self.graph_builder.add_node("question_classification", QuestionClassificationNode(CustomLogger('question_classification')))
+        self.graph_builder.add_node("rag_retrieve", RAGRetrieveNode(CustomLogger('rag_retrieve')))
+        self.graph_builder.add_node("answer_generation", AnswerGenerationNode(CustomLogger('answer_generation')))
+        self.graph_builder.add_node("language_detection", DetectLanguageNode(CustomLogger('language_detection')))
+        self.graph_builder.add_node("vietnamese_translation", VietnameseTranslationNode(CustomLogger('vietnamese_translation')))
 
         self.graph_builder.add_edge(START, "language_detection")
         self.graph_builder.add_conditional_edges(
