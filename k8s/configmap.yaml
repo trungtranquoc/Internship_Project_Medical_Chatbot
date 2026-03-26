@@ -4,7 +4,7 @@ metadata:
   name: medical-chatbot-config
 data:
   # ========== FRONTEND SERVICE ==========
-  BACKEND_HOST: "backend-service"            # FastAPI backend service DNS
+  BACKEND_HOST: "medical-backend-service"            # FastAPI backend service DNS
   BACKEND_PORT: "8001"
   HTTP_TIMEOUT: "60"                         # Timeout for Chatbot to respond
   POSTGRES_HOST: "postgres-service"          # PostgreSQL service DNS

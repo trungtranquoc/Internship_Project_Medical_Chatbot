@@ -15,6 +15,7 @@ spec:
       containers:
       - name: chatbot
         image: medical-chatbot:latest
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 50051
         env:
@@ -24,7 +25,10 @@ spec:
               name: medical-secrets
               key: OPENAI_API_KEY
         - name: MILVUS_HOST
-          value: "milvus-standalone"
+          valueFrom:
+            configMapKeyRef:
+              name: medical-chatbot-config
+              key: MILVUS_HOST
         - name: MILVUS_PORT
           valueFrom:
             configMapKeyRef:
