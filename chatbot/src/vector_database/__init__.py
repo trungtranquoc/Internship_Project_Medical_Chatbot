@@ -7,7 +7,7 @@ import os
 
 MILVUS_HOST = os.environ.get("MILVUS_HOST", "localhost")  # Default Milvus host
 MILVUS_PORT = int(os.environ.get("MILVUS_PORT", 19530))
-COLLECTION_NAME = os.environ.get("MILVUS_COLLECTION", "medical_database_v3")  # Default collection name
+COLLECTION_NAME = os.environ.get("MILVUS_COLLECTION")  # Default collection name
 
 db = MilvusDB(
     collection_name=COLLECTION_NAME,
