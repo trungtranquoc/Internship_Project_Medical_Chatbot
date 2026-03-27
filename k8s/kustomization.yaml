@@ -7,6 +7,10 @@ resources:
   - configmap.yaml
   - postgres-storage.yaml
   - postgres-deployment.yaml
+  - milvus-storage.yaml
+  - milvus-etcd-deployment.yaml
+  - milvus-minio-deployment.yaml
+  - milvus-standalone-deployment.yaml
   - backend-deployment.yaml
   - frontend-deployment.yaml
   - chatbot-deployment.yaml

@@ -34,6 +34,11 @@ spec:
             configMapKeyRef:
               name: medical-chatbot-config
               key: MILVUS_PORT
+        - name: MILVUS_COLLECTION
+          valueFrom:
+            configMapKeyRef:
+              name: medical-chatbot-config
+              key: MILVUS_COLLECTION
 ---
 apiVersion: v1
 kind: Service

@@ -35,7 +35,8 @@ data:
 
   # ========== MINIO SERVICE ==========
   MINIO_ADDRESS: "minio:9000"                # For Milvus to connect to MinIO
-
+  MINIO_ACCESS_KEY: "minioadmin"
+  MINIO_SECRET_KEY: "minioadmin"
   # ========== MILVUS (STANDALONE) SERVICE ==========
   MQ_TYPE: "woodpecker"
 
