@@ -1,0 +1,35 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: medical-data-ingestor
+  namespace: medical-chatbot
+spec:
+  template:
+    spec:
+      containers:
+      - name: ingestor
+        image: medical-chatbot-ingestor:latest
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: MILVUS_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: medical-chatbot-config
+              key: MILVUS_HOST
+        - name: MILVUS_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: medical-chatbot-config
+              key: MILVUS_PORT
+        - name: MILVUS_COLLECTION
+          valueFrom:
+            configMapKeyRef:
+              name: medical-chatbot-config
+              key: MILVUS_COLLECTION
+        - name: OPENAI_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: medical-secrets
+              key: OPENAI_API_KEY
+      restartPolicy: OnFailure
+  backoffLimit: 2
