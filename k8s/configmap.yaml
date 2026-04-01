@@ -19,7 +19,7 @@ data:
   MILVUS_HOST: "milvus-standalone"           # Milvus service DNS
   MILVUS_PORT: "19530"
   MILVUS_COLLECTION: "medical_QA_embedding"
-  LANGFUSE_AVAILABLE: "false"
+  LANGFUSE_AVAILABLE: "False"
   LANGFUSE_HOST: "https://api.langfuse.com"
   DEVICE: "cpu"                              # cpu | mps | cuda (based on infrastructure)
 
@@ -40,5 +40,8 @@ data:
   # ========== MILVUS (STANDALONE) SERVICE ==========
   MQ_TYPE: "woodpecker"
 
+  # ========== GRPC SERVICE ==========
+  GRPC_HOST: "medical-chatbot-service"       # For Backend to connect to Chat
+  GRPC_PORT: "50051"
   # ========== GLOBAL/SHARED CONFIG ==========
   ENV: "development"                          # development | staging | production

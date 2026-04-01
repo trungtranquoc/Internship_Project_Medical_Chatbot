@@ -8,7 +8,7 @@ spec:
     spec:
       containers:
       - name: ingestor
-        image: medical-chatbot-ingestor:latest
+        image: medical-chatbot-ingestor:v2
         imagePullPolicy: IfNotPresent
         env:
         - name: MILVUS_HOST

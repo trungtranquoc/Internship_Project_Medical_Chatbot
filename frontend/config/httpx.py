@@ -46,7 +46,7 @@ class HTTPClient:
             raise ConnectionError(self.client.base_url, ping_response.status_code)
 
     def set_user_header(self, user_id: str):
-        self.client.headers.update({"user_id": user_id})
+        self.client.headers.update({"user_id": str(user_id)})
 
     @handle_http_exceptions
     async def login(self, username: str, password: str):

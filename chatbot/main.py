@@ -1,11 +1,11 @@
-import dotenv
+# import dotenv
 import os
 import asyncio
 
 from src.logger import CustomLogger
 
-env_pat = os.getenv()
-dotenv.load_dotenv(f".env.{env_pat}", override=True)
+# env_pat = os.getenv()
+# dotenv.load_dotenv(f".env.{env_pat}", override=True)
 DEVICE = os.getenv("DEVICE", "cpu")
 
 logger = CustomLogger('main')

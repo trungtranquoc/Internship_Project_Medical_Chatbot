@@ -54,9 +54,10 @@ async def streaming(request: Request, query_body: ChatbotQuery) -> StreamingResp
         time_to_first_token = None
 
         async for chunk in chatbot_grpc_client.send_question(query=question, history=history):
-            if not time_to_first_token:
-                time_to_first_token = time() - start
-            yield chunk.encode('utf-8')
+            if chunk is not None:  # Add this check
+                    if not time_to_first_token:
+                        time_to_first_token = time() - start
+                    yield chunk.encode('utf-8')
 
     return StreamingResponse(call_to_chatbot(), media_type="text/event-stream")
 

@@ -44,6 +44,16 @@ spec:
             configMapKeyRef:
               name: medical-chatbot-config
               key: POSTGRES_DB
+        - name: GRPC_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: medical-chatbot-config
+              key: GRPC_HOST
+        - name: GRPC_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: medical-chatbot-config
+              key: GRPC_PORT
 ---
 apiVersion: v1
 kind: Service

@@ -62,15 +62,18 @@ def setup_milvus_collection():
     connections.connect(alias="default", host=MILVUS_HOST, port=MILVUS_PORT)
     
     if utility.has_collection(COLLECTION_NAME):
-        print(f"⚠️ Collection {COLLECTION_NAME} already exists. Skipping creation.")
-        return Collection(COLLECTION_NAME)
+            # Optional: drop collection here if you want to start clean every time
+            # utility.drop_collection(COLLECTION_NAME)
+            print(f"⚠️ Collection {COLLECTION_NAME} already exists.")
+            return Collection(COLLECTION_NAME)
 
     fields = [
         FieldSchema(name="id", dtype=DataType.INT64, is_primary=True, auto_id=True),
         FieldSchema(name="embedding_vector", dtype=DataType.FLOAT_VECTOR, dim=1536),
-        FieldSchema(name="question", dtype=DataType.VARCHAR, max_length=1000), # Increased for safety
+        FieldSchema(name="question", dtype=DataType.VARCHAR, max_length=1000),
         FieldSchema(name="answer", dtype=DataType.VARCHAR, max_length=30000),
         FieldSchema(name="topic", dtype=DataType.VARCHAR, max_length=500),
+        FieldSchema(name="keyword", dtype=DataType.VARCHAR, max_length=500), 
     ]
     
     schema = CollectionSchema(fields=fields, description="Medical Chatbot Vector Database")
@@ -97,7 +100,7 @@ def main():
     batcher = TextBatcher(df['Text'].tolist(), df['count_word'].tolist())
     all_embeddings = []
     
-    print("🧠 Generating embeddings...")
+    print("🧠 Generating NEW embeddings...")
     batches = list(batcher.get_batches())
     for i, batch in enumerate(tqdm(batches)):
         if i > 0:
@@ -112,6 +115,7 @@ def main():
             "question": q,
             "answer": a,
             "topic": t,
+            "keyword": t, # Use topic as keyword for now
         }
         for emb, q, a, t in zip(all_embeddings, df['Question'].tolist(), df['Answer'].tolist(), df['topic'].tolist())
     ]
