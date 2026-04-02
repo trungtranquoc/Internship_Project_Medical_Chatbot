@@ -111,9 +111,10 @@ class ChatbotGRPCClient:
                 history=history or [],
                 isStreaming=True
             )
-            
-            for resp in self.stub.Answer(request, timeout=60.0):
+            timeout = 300.0  # Set a timeout for the gRPC call
+            for resp in self.stub.Answer(request, timeout=timeout):
                 # yield partial chunk to caller
+                logger.debug(f"Waiting for response chunk from gRPC server... {timeout} seconds remaining")
                 yield resp.answer
             
         except grpc.RpcError as e:
