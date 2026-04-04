@@ -6,9 +6,10 @@ metadata:
 spec:
   template:
     spec:
+      serviceAccountName: milvus-s3-sa
       containers:
       - name: ingestor
-        image: medical-chatbot-ingestor:v2
+        image: 376276261088.dkr.ecr.us-east-1.amazonaws.com/medical-chatbot/ingest:latest
         imagePullPolicy: IfNotPresent
         env:
         - name: MILVUS_HOST
@@ -29,7 +30,20 @@ spec:
         - name: OPENAI_API_KEY
           valueFrom:
             secretKeyRef:
-              name: medical-secrets
+              name: medical-secrets # Created automatically by the CSI Driver
               key: OPENAI_API_KEY
+        # 1. ADD VOLUME MOUNT TO CONTAINER
+        volumeMounts:
+        - name: secrets-store-inline
+          mountPath: "/mnt/secrets-store"
+          readOnly: true
+      # 2. ADD VOLUMES SECTION TO SPEC
+      volumes:
+      - name: secrets-store-inline
+        csi:
+          driver: secrets-store.csi.k8s.io
+          readOnly: true
+          volumeAttributes:
+            secretProviderClass: "medical-secrets-provider"
       restartPolicy: OnFailure
   backoffLimit: 2

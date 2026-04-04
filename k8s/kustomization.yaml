@@ -5,6 +5,7 @@ namespace: medical-chatbot
 
 resources:
   - configmap.yaml
+  - secret-provider.yaml
   # - postgres-storage.yaml
   # - postgres-deployment.yaml
   - gp3-storage-class.yaml
