@@ -4,12 +4,12 @@ from .schema.chat_history import ChatHistorySchema
 from .postgresql_db import PostgreSQLDatabase
 import os
 
-POSTGRES_HOST = os.environ.get("POSTGRES_HOST", "localhost")
-POSTGRES_PORT = os.environ.get("POSTGRES_PORT", "5432")
-POSTGRES_USER = os.environ.get("POSTGRES_USER", "CHAINLIT_DB")
-POSTGRES_PASSWORD = os.environ.get("POSTGRES_PASSWORD", "CHAINLIT_DB")
-POSTGRES_DB = os.environ.get("POSTGRES_DB", "MEDICAL_CHAT_HISTORY")
+POSTGRES_HOST = os.environ.get("POSTGRES_HOST")
+POSTGRES_PORT = os.environ.get("POSTGRES_PORT")
+POSTGRES_USER = os.environ.get("POSTGRES_USER")
+POSTGRES_PASSWORD = os.environ.get("POSTGRES_PASSWORD")
+POSTGRES_DB = os.environ.get("POSTGRES_DB")
 
-postgresql_db = PostgreSQLDatabase(f"postgresql+asyncpg://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}")
+postgresql_db = PostgreSQLDatabase(f"postgresql+asyncpg://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}?ssl=require")
 
 __all__ = [ "UserSchema", "ChatHistorySchema", "postgresql_db"]

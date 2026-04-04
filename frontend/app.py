@@ -119,7 +119,7 @@ def data_layer():
     Initialize the data layer for the application.
     """
     return SQLAlchemyDataLayer(
-        conninfo=f"postgresql+asyncpg://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}"
+        conninfo=f"postgresql+asyncpg://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}?ssl=require"
     )
 
 @cl.on_message

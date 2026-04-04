@@ -5,8 +5,8 @@ from .VectorDB import NotFoundCollectionError
 
 import os
 
-MILVUS_HOST = os.environ.get("MILVUS_HOST", "localhost")  # Default Milvus host
-MILVUS_PORT = int(os.environ.get("MILVUS_PORT", 19530))
+MILVUS_HOST = os.environ.get("MILVUS_HOST")  # Default Milvus host
+MILVUS_PORT = int(os.environ.get("MILVUS_PORT"))  # Default Milvus port
 COLLECTION_NAME = os.environ.get("MILVUS_COLLECTION")  # Default collection name
 
 db = MilvusDB(
