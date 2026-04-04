@@ -4,16 +4,8 @@ metadata:
   name: etcd-pvc
 spec:
   accessModes: [ReadWriteOnce]
+  storageClassName: gp3
   resources:
     requests:
       storage: 1Gi
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: minio-pvc
-spec:
-  accessModes: [ReadWriteOnce]
-  resources:
-    requests:
-      storage: 10Gi
+      # On EKS,  ensure this PVC is backed by an AWS storage class (like gp3)

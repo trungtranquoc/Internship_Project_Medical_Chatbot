@@ -12,9 +12,10 @@ spec:
       labels:
         app: milvus
     spec:
+      serviceAccountName: milvus-s3-sa
       containers:
       - name: milvus
-        image: milvusdb/milvus:v2.6.0-rc1
+        image: 376276261088.dkr.ecr.us-east-1.amazonaws.com/medical-chatbot/milvus:v2.6.0-rc1
         command: ["milvus", "run", "standalone"]
         env:
         - name: ETCD_ENDPOINTS
@@ -27,8 +28,31 @@ spec:
             configMapKeyRef:
               name: medical-chatbot-config
               key: MINIO_ADDRESS
+        - name: MINIO_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: medical-chatbot-config
+              key: MINIO_PORT
+        - name: MINIO_USE_SSL
+          valueFrom:
+            configMapKeyRef:
+              name: medical-chatbot-config
+              key: MINIO_USE_SSL
+        - name: MINIO_BUCKET_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: medical-chatbot-config
+              key: MINIO_BUCKET_NAME
+        volumeMounts:
+        - name: milvus-config
+          mountPath: /milvus/configs/user.yaml
+          subPath: user.yaml
         ports:
         - containerPort: 19530
+      volumes:
+      - name: milvus-config
+        configMap:
+          name: medical-chatbot-config
 ---
 apiVersion: v1
 kind: Service

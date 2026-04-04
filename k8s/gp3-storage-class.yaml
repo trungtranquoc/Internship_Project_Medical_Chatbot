@@ -1,0 +1,14 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: gp3
+  annotations:
+    # This makes gp3 the default for all future PVCs
+    storageclass.kubernetes.io/is-default-class: "true"
+# CRITICAL: For EKS Auto Mode, use this exact provisioner
+provisioner: ebs.csi.eks.amazonaws.com
+volumeBindingMode: WaitForFirstConsumer
+reclaimPolicy: Delete
+parameters:
+  type: gp3
+  fsType: ext4
