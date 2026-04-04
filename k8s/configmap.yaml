@@ -4,13 +4,13 @@ metadata:
   name: medical-chatbot-config
 data:
   # ========== FRONTEND SERVICE ==========
-  BACKEND_HOST: "medical-backend-service"            # FastAPI backend service DNS
-  BACKEND_PORT: "8001"
-  HTTP_TIMEOUT: "60"                         # Timeout for Chatbot to respond
-  POSTGRES_HOST: "postgres-service"          # PostgreSQL service DNS
-  POSTGRES_PORT: "5432"
-  POSTGRES_USER: "CHAINLIT_DB"
-  POSTGRES_DB: "MEDICAL_CHAT_HISTORY"
+  # BACKEND_HOST: "medical-backend-service"            # FastAPI backend service DNS
+  # BACKEND_PORT: "8001"
+  # HTTP_TIMEOUT: "60"                         # Timeout for Chatbot to respond
+  # POSTGRES_HOST: "postgres-service"          # PostgreSQL service DNS
+  # POSTGRES_PORT: "5432"
+  # POSTGRES_USER: "CHAINLIT_DB"
+  # POSTGRES_DB: "MEDICAL_CHAT_HISTORY"
 
   # ========== BACKEND SERVICE ==========
   # Uses POSTGRES_* from above for database connection
@@ -19,12 +19,10 @@ data:
   MILVUS_HOST: "milvus-standalone"           # Milvus service DNS
   MILVUS_PORT: "19530"
   MILVUS_COLLECTION: "medical_QA_embedding"
-  LANGFUSE_AVAILABLE: "False"
-  LANGFUSE_HOST: "https://api.langfuse.com"
-  DEVICE: "cpu"                              # cpu | mps | cuda (based on infrastructure)
+  # DEVICE: "cpu"                              # cpu | mps | cuda (based on infrastructure)
 
   # ========== DB SERVICE (PostgreSQL) ==========
-  PGUSER: "CHAINLIT_DB"
+  # PGUSER: "CHAINLIT_DB"
 
   # ========== ETCD SERVICE ==========
   ETCD_AUTO_COMPACTION_MODE: "revision"
@@ -33,15 +31,29 @@ data:
   ETCD_SNAPSHOT_COUNT: "50000"
   ETCD_ENDPOINTS: "etcd:2379"                # For Milvus to connect to etcd
 
-  # ========== MINIO SERVICE ==========
-  MINIO_ADDRESS: "minio:9000"                # For Milvus to connect to MinIO
-  MINIO_ACCESS_KEY: "minioadmin"
-  MINIO_SECRET_KEY: "minioadmin"
+  # ========== S3/MINIO SERVICE ==========
+  MINIO_ADDRESS: "s3.us-east-1.amazonaws.com"                # For Milvus to connect to MinIO
+  MINIO_PORT: "443"
+  MINIO_USE_SSL: "true"
+  MINIO_BUCKET_NAME: "medical-chatbot-data-bucket-376276261088-us-east-1-an"
   # ========== MILVUS (STANDALONE) SERVICE ==========
   MQ_TYPE: "woodpecker"
 
   # ========== GRPC SERVICE ==========
-  GRPC_HOST: "medical-chatbot-service"       # For Backend to connect to Chat
-  GRPC_PORT: "50051"
+  # GRPC_HOST: "medical-chatbot-service"       # For Backend to connect to Chat
+  # GRPC_PORT: "50051"
   # ========== GLOBAL/SHARED CONFIG ==========
-  ENV: "development"                          # development | staging | production
+  ENV: "production"                          # development | staging | production
+
+
+  # ========== MILVUS OVERRIDE CONFIG ==========
+  user.yaml: |
+    minio:
+      address: s3.us-east-1.amazonaws.com
+      port: 443
+      useSSL: true
+      bucketName: medical-chatbot-data-bucket-376276261088-us-east-1-an
+      useIAM: true
+      cloudProvider: aws
+      iamEndpoint: ""
+      region: us-east-1

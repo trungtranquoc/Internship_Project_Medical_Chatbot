@@ -5,13 +5,14 @@ namespace: medical-chatbot
 
 resources:
   - configmap.yaml
-  - postgres-storage.yaml
-  - postgres-deployment.yaml
+  # - postgres-storage.yaml
+  # - postgres-deployment.yaml
+  - gp3-storage-class.yaml
   - milvus-storage.yaml
   - milvus-etcd-deployment.yaml
-  - milvus-minio-deployment.yaml
+  # - milvus-minio-deployment.yaml    # Switched to AWS S3, so MinIO deployment is no longer needed
   - milvus-standalone-deployment.yaml
-  - backend-deployment.yaml
-  - frontend-deployment.yaml
-  - chatbot-deployment.yaml
+  # - backend-deployment.yaml
+  # - frontend-deployment.yaml
+  # - chatbot-deployment.yaml
 
