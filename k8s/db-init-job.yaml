@@ -1,0 +1,61 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: medical-db-initializer
+  namespace: medical-chatbot
+spec:
+  template:
+    spec:
+      serviceAccountName: milvus-s3-sa 
+      containers:
+      - name: initializer
+        image: 376276261088.dkr.ecr.us-east-1.amazonaws.com/medical-chatbot/postgres:15
+        command: ["psql"]
+        args:
+          - "-h"
+          - "$(POSTGRES_HOST)"
+          - "-U"
+          - "$(POSTGRES_USER)"
+          - "-d"
+          - "$(POSTGRES_DB)"
+          - "-f"
+          - "/scripts/init.sql"
+        env:
+        - name: POSTGRES_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: medical-chatbot-config
+              key: POSTGRES_HOST
+        - name: PGPASSWORD # psql automatically uses this for authentication
+          valueFrom:
+            secretKeyRef:
+              name: medical-secrets
+              key: POSTGRES_PASSWORD
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: medical-secrets
+              key: POSTGRES_USER
+        - name: POSTGRES_DB
+          valueFrom:
+            configMapKeyRef:
+              name: medical-chatbot-config
+              key: POSTGRES_DB
+        volumeMounts:
+        - name: sql-script
+          mountPath: /scripts
+        - name: secrets-store-inline # Syncs your RDS password from AWS Secrets Manager
+          mountPath: "/mnt/secrets-store"
+          readOnly: true
+      volumes:
+      - name: sql-script
+        configMap:
+          name: medical-db-init-script
+      - name: secrets-store-inline
+        csi:
+          driver: secrets-store.csi.k8s.io
+          readOnly: true
+          volumeAttributes:
+            secretProviderClass: "medical-secrets-provider"
+      restartPolicy: Never
+  backoffLimit: 1
