@@ -12,9 +12,10 @@ spec:
       labels:
         app: chatbot
     spec:
+      serviceAccountName: milvus-s3-sa
       containers:
       - name: chatbot
-        image: medical-chatbot:latest
+        image: 376276261088.dkr.ecr.us-east-1.amazonaws.com/medical-chatbot/inference:latest
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 50051
@@ -39,7 +40,17 @@ spec:
             configMapKeyRef:
               name: medical-chatbot-config
               key: MILVUS_COLLECTION
-
+        volumeMounts:
+        - name: secrets-store-inline
+          mountPath: "/mnt/secrets-store"
+          readOnly: true
+      volumes:
+      - name: secrets-store-inline
+        csi:
+          driver: secrets-store.csi.k8s.io
+          readOnly: true
+          volumeAttributes:
+            secretProviderClass: "medical-secrets-provider"
               
 ---
 apiVersion: v1

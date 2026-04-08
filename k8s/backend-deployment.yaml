@@ -12,9 +12,10 @@ spec:
       labels:
         app: backend
     spec:
+      serviceAccountName: milvus-s3-sa
       containers:
       - name: backend
-        image: medical-chatbot-backend
+        image: 376276261088.dkr.ecr.us-east-1.amazonaws.com/medical-chatbot/backend@sha256:b0e3d2ee59c26f90aa20f7a59389bc3b6f3499a0c26efac6e95ce1782ce6c59c
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8001
@@ -31,8 +32,8 @@ spec:
               key: POSTGRES_PORT
         - name: POSTGRES_USER
           valueFrom:
-            configMapKeyRef:
-              name: medical-chatbot-config
+            secretKeyRef:
+              name: medical-secrets
               key: POSTGRES_USER
         - name: POSTGRES_PASSWORD
           valueFrom:
@@ -54,6 +55,17 @@ spec:
             configMapKeyRef:
               name: medical-chatbot-config
               key: GRPC_PORT
+        volumeMounts:
+        - name: secrets-store-inline
+          mountPath: "/mnt/secrets-store"
+          readOnly: true
+      volumes:
+      - name: secrets-store-inline
+        csi:
+          driver: secrets-store.csi.k8s.io
+          readOnly: true
+          volumeAttributes:
+            secretProviderClass: "medical-secrets-provider"
 ---
 apiVersion: v1
 kind: Service

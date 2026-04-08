@@ -4,13 +4,13 @@ metadata:
   name: medical-chatbot-config
 data:
   # ========== FRONTEND SERVICE ==========
-  # BACKEND_HOST: "medical-backend-service"            # FastAPI backend service DNS
-  # BACKEND_PORT: "8001"
-  # HTTP_TIMEOUT: "60"                         # Timeout for Chatbot to respond
-  # POSTGRES_HOST: "postgres-service"          # PostgreSQL service DNS
-  # POSTGRES_PORT: "5432"
-  # POSTGRES_USER: "CHAINLIT_DB"
-  # POSTGRES_DB: "MEDICAL_CHAT_HISTORY"
+  BACKEND_HOST: "medical-backend-service"            # FastAPI backend service DNS
+  BACKEND_PORT: "8001"
+  HTTP_TIMEOUT: "600"                         # Timeout for Chatbot to respond
+  POSTGRES_HOST: "medical-chatbot-db.cidauo64mf0l.us-east-1.rds.amazonaws.com"          # PostgreSQL service DNS
+  POSTGRES_PORT: "5432"
+  # POSTGRES_USER: "CHAINLIT_DB"                       # Moved to Secret for better security
+  POSTGRES_DB: "MEDICAL_CHAT_HISTORY"
 
   # ========== BACKEND SERVICE ==========
   # Uses POSTGRES_* from above for database connection
@@ -20,9 +20,6 @@ data:
   MILVUS_PORT: "19530"
   MILVUS_COLLECTION: "medical_QA_embedding"
   # DEVICE: "cpu"                              # cpu | mps | cuda (based on infrastructure)
-
-  # ========== DB SERVICE (PostgreSQL) ==========
-  # PGUSER: "CHAINLIT_DB"
 
   # ========== ETCD SERVICE ==========
   ETCD_AUTO_COMPACTION_MODE: "revision"
@@ -39,9 +36,9 @@ data:
   # ========== MILVUS (STANDALONE) SERVICE ==========
   MQ_TYPE: "woodpecker"
 
-  # ========== GRPC SERVICE ==========
-  # GRPC_HOST: "medical-chatbot-service"       # For Backend to connect to Chat
-  # GRPC_PORT: "50051"
+  #========== GRPC SERVICE ==========
+  GRPC_HOST: "medical-chatbot-service"       # For Backend to connect to Chat
+  GRPC_PORT: "50051"
   # ========== GLOBAL/SHARED CONFIG ==========
   ENV: "production"                          # development | staging | production
 
