@@ -7,7 +7,7 @@ from time import time
 from ..vector_database import db
 from .base_node import BaseNode
 
-RAG_SEARCH_LIMIT = 20  # Limit for RAG search results
+RAG_SEARCH_LIMIT = 5  # Limit for RAG search results
 CONTEXT_LIMIT = 3  # Limit for context documents
 
 # Turn off warnings from transformers

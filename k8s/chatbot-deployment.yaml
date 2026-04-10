@@ -15,7 +15,7 @@ spec:
       serviceAccountName: milvus-s3-sa
       containers:
       - name: chatbot
-        image: 376276261088.dkr.ecr.us-east-1.amazonaws.com/medical-chatbot/inference:latest
+        image: 376276261088.dkr.ecr.us-east-1.amazonaws.com/medical-chatbot/inference:latest@sha256:28eccb1ed406cd7383e32c46907dc7b4c2404a3bf9d5ce8b6e9f6c53aee354aa
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 50051
@@ -40,6 +40,26 @@ spec:
             configMapKeyRef:
               name: medical-chatbot-config
               key: MILVUS_COLLECTION
+        - name: LANGFUSE_AVAILABLE
+          valueFrom:
+            configMapKeyRef:
+              name: medical-chatbot-config
+              key: LANGFUSE_AVAILABLE
+        - name: LANGFUSE_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: medical-secrets
+              key: LANGFUSE_SECRET_KEY
+        - name: LANGFUSE_PUBLIC_KEY
+          valueFrom:
+            secretKeyRef:
+              name: medical-secrets
+              key: LANGFUSE_PUBLIC_KEY
+        - name: LANGFUSE_HOST
+          valueFrom:
+            secretKeyRef:
+              name: medical-secrets
+              key: LANGFUSE_BASE_URL
         volumeMounts:
         - name: secrets-store-inline
           mountPath: "/mnt/secrets-store"

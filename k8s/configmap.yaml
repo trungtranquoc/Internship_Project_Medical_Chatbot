@@ -19,6 +19,7 @@ data:
   MILVUS_HOST: "milvus-standalone"           # Milvus service DNS
   MILVUS_PORT: "19530"
   MILVUS_COLLECTION: "medical_QA_embedding"
+  LANGFUSE_AVAILABLE: "true"                          # Enable Langfuse integration
   # DEVICE: "cpu"                              # cpu | mps | cuda (based on infrastructure)
 
   # ========== ETCD SERVICE ==========
