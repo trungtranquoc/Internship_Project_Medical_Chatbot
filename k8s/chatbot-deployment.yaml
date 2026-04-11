@@ -15,7 +15,7 @@ spec:
       serviceAccountName: milvus-s3-sa
       containers:
       - name: chatbot
-        image: 376276261088.dkr.ecr.us-east-1.amazonaws.com/medical-chatbot/inference:latest@sha256:28eccb1ed406cd7383e32c46907dc7b4c2404a3bf9d5ce8b6e9f6c53aee354aa
+        image: 376276261088.dkr.ecr.us-east-1.amazonaws.com/medical-chatbot/inference:latest@sha256:7350b88c95dd7ad433984f61f45f3cdd883e840ccfce89d9fe730709a2695840
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 50051
