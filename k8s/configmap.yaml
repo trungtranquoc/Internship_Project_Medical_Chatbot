@@ -21,6 +21,7 @@ data:
   MILVUS_COLLECTION: "medical_QA_embedding"
   LANGFUSE_AVAILABLE: "true"                          # Enable Langfuse integration
   # DEVICE: "cpu"                              # cpu | mps | cuda (based on infrastructure)
+  RERANKER_MODEL: "cross-encoder/ms-marco-MiniLM-L-6-v2"
 
   # ========== ETCD SERVICE ==========
   ETCD_AUTO_COMPACTION_MODE: "revision"

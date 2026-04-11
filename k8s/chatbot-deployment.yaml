@@ -60,6 +60,11 @@ spec:
             secretKeyRef:
               name: medical-secrets
               key: LANGFUSE_BASE_URL
+        - name: RERANKER_MODEL
+          valueFrom:
+            configMapKeyRef:
+              name: medical-chatbot-config
+              key: RERANKER_MODEL
         volumeMounts:
         - name: secrets-store-inline
           mountPath: "/mnt/secrets-store"

@@ -101,8 +101,10 @@ class ChatbotGRPCClient:
             Optional[str]: The chatbot's response or None if error
         """
         if not self.stub:
-            logger.error("gRPC client not connected. Call connect() first.")
-            yield None
+            logger.info("No active gRPC stub. Trying to connect before sending request...")
+            if not self.connect():
+                logger.error("Could not connect to chatbot service.")
+                return
         
         try:
             # Create request
