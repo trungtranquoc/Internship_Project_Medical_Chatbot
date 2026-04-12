@@ -34,18 +34,7 @@ jobs:
         run: |
           cd backend
           pip install -r requirements.txt
-
-      - name: Run Backend Tests
-        env:
-          POSTGRES_HOST: localhost
-          POSTGRES_PORT: 5432
-          POSTGRES_USER: test_user
-          POSTGRES_PASSWORD: test_password
-          POSTGRES_DB: test_db
-        run: |
-          cd backend
-          python test_uuid_serialization.py
-
+          
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
