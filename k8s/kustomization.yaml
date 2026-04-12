@@ -3,17 +3,26 @@ kind: Kustomization
 
 namespace: medical-chatbot
 
-resources:
-  - configmap.yaml
-  - secret-provider.yaml
   # - postgres-storage.yaml # Switched to AWS RDS, so PostgreSQL storage is no longer needed
   # - postgres-deployment.yaml # Switched to AWS RDS, so PostgreSQL deployment is no longer needed
-  - gp3-storage-class.yaml
-  - milvus-storage.yaml
-  - milvus-etcd-deployment.yaml
   # - milvus-minio-deployment.yaml    # Switched to AWS S3, so MinIO deployment is no longer needed
-  - milvus-standalone-deployment.yaml
-  - backend-deployment.yaml
-  - frontend-deployment.yaml
-  - chatbot-deployment.yaml
-
+resources:
+- configmap.yaml
+- secret-provider.yaml
+- gp3-storage-class.yaml
+- milvus-storage.yaml
+- milvus-etcd-deployment.yaml
+- milvus-standalone-deployment.yaml
+- backend-deployment.yaml
+- frontend-deployment.yaml
+- chatbot-deployment.yaml
+images:
+- name: 376276261088.dkr.ecr.us-east-1.amazonaws.com/medical-chatbot/backend
+  newName: 376276261088.dkr.ecr.us-east-1.amazonaws.com/medical-chatbot/backend
+  newTag: 10ca1200974afd4faf340e6e87bfc0835c476679
+- name: 376276261088.dkr.ecr.us-east-1.amazonaws.com/medical-chatbot/frontend
+  newName: 376276261088.dkr.ecr.us-east-1.amazonaws.com/medical-chatbot/frontend
+  newTag: 10ca1200974afd4faf340e6e87bfc0835c476679
+- name: 376276261088.dkr.ecr.us-east-1.amazonaws.com/medical-chatbot/inference
+  newName: 376276261088.dkr.ecr.us-east-1.amazonaws.com/medical-chatbot/inference
+  newTag: 10ca1200974afd4faf340e6e87bfc0835c476679
