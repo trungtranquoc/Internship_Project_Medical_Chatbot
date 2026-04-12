@@ -1,0 +1,122 @@
+name: Medical Chatbot CI/CD Pipeline
+
+on:
+  push:
+    branches: [ k8s ]
+env:
+  AWS_REGION: us-east-1
+  ECR_REGISTRY_ID: "376276261088"
+  ECR_REPOSITORY_PREFIX: medical-chatbot
+
+permissions:
+  id-token: write # Required for requesting the JWT
+  contents: write  # Required for actions/checkout
+
+jobs:
+  # 1. Test and Build Backend
+  backend-ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::376276261088:role/github-actions-ecr-push-role
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install Dependencies
+        run: |
+          cd backend
+          pip install -r requirements.txt
+
+      - name: Run Backend Tests
+        run: |
+          cd backend
+          python test_uuid_serialization.py
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build and Push Backend Image
+        uses: ./.github/actions/build-push-ecr
+        with:
+          context: ./backend
+          repository: ${{ env.ECR_REPOSITORY_PREFIX }}/backend
+          image_tag: ${{ github.sha }}
+
+  # 2. Build and Push Chatbot (Inference)
+  chatbot-ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::376276261088:role/github-actions-ecr-push-role
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build and Push Chatbot Image
+        uses: ./.github/actions/build-push-ecr
+        with:
+          context: ./chatbot
+          repository: ${{ env.ECR_REPOSITORY_PREFIX }}/inference
+          image_tag: ${{ github.sha }}
+
+  # 3. Build and Push Frontend
+  frontend-ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::376276261088:role/github-actions-ecr-push-role
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build and Push Frontend Image
+        uses: ./.github/actions/build-push-ecr
+        with:
+          context: ./frontend
+          repository: ${{ env.ECR_REPOSITORY_PREFIX }}/frontend
+          image_tag: ${{ github.sha }}
+
+  # 4. Trigger ArgoCD Sync (GitOps)
+  update-manifests:
+    needs: [backend-ci, chatbot-ci, frontend-ci]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/k8s' # redundant check to ensure this only runs on k8s branch
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Update Image Tags in Kustomize
+        run: |
+          cd k8s
+          kustomize edit set image 376276261088.dkr.ecr.us-east-1.amazonaws.com/medical-chatbot/backend=376276261088.dkr.ecr.us-east-1.amazonaws.com/medical-chatbot/backend:${{ github.sha }}
+          kustomize edit set image 376276261088.dkr.ecr.us-east-1.amazonaws.com/medical-chatbot/inference=376276261088.dkr.ecr.us-east-1.amazonaws.com/medical-chatbot/inference:${{ github.sha }}
+          kustomize edit set image 376276261088.dkr.ecr.us-east-1.amazonaws.com/medical-chatbot/frontend=376276261088.dkr.ecr.us-east-1.amazonaws.com/medical-chatbot/frontend:${{ github.sha }}
+          git config --global user.name "CI-Bot"
+          git config --global user.email "ci@example.com"
+          git add .
+          if ! git diff --cached --quiet; then
+            git commit -m "Update image tags to ${{ github.sha }}"
+            git push
+          else
+            echo "No manifest changes to commit"
+          fi
