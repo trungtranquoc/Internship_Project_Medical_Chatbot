@@ -1,0 +1,25 @@
+name: Build and Push ECR Image
+description: Build a Docker image and push it to ECR
+
+inputs:
+  context:
+    required: true
+    description: Build context path
+  repository:
+    required: true
+    description: ECR repository name
+  image_tag:
+    required: true
+    description: Docker image tag
+
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      run: |
+        ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+        REGION="${AWS_REGION}"
+        IMAGE_URI="${ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com/${{ inputs.repository }}:${{ inputs.image_tag }}"
+
+        docker build -t "$IMAGE_URI" "${{ inputs.context }}"
+        docker push "$IMAGE_URI"
