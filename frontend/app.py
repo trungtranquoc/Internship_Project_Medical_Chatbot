@@ -1,4 +1,3 @@
-# Test pipeline trigger
 import chainlit as cl
 from chainlit.data.sql_alchemy import SQLAlchemyDataLayer
 
